@@ -4,8 +4,8 @@ using The_Fountain_Of_Objects.Enumerations;
 internal class Program
 {
     private static void Main()
-    {
-        Game Game = new();
+    {        
+        Game Game = new(GameSize.HandleGameSize());
 
         while(!Game.GameIsWon)
         {

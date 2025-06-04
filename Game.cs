@@ -4,10 +4,10 @@ using The_Fountain_Of_Objects.Rooms;
 
 namespace The_Fountain_Of_Objects
 {
-    public class Game
+    public class Game(int GameSize)
     {
         public bool GameIsWon { get; set; } = false;
-        public GridOfRooms GridOfRooms { get; set; } = new(4);
+        public GridOfRooms GridOfRooms { get; set; } = new(GameSize);
         public void AskForUserInput()
         {
             TextColour.HandleText(TextEnumeration.DescriptiveText, "What do you want to do? ");

@@ -10,12 +10,14 @@ namespace The_Fountain_Of_Objects
         public int CurrentRow { get; set; }
         public int CurrentColumn { get; set; }
         public bool FountainIsEnabled { get; set; } = false;
+        private int SizeBoundary { get; set; } 
         public GridOfRooms(int SizeOfGrid)
         {
+            SizeBoundary = SizeOfGrid - 1;
             Rooms = new IRoom[SizeOfGrid, SizeOfGrid];
-            Rooms[0, 0] = new EntranceRoom(0, 0);
-            Rooms[0, 2] = new FountainRoom(0, 2);
-            CurrentRow = 0;
+            Rooms[SizeBoundary, 0] = new EntranceRoom(SizeBoundary, 0);
+            Rooms[0, SizeOfGrid / 2] = new FountainRoom(0, SizeOfGrid / 2);
+            CurrentRow = SizeBoundary;
             CurrentColumn = 0;
 
             for (int I = SizeOfGrid; I--> 0;)
@@ -66,7 +68,7 @@ namespace The_Fountain_Of_Objects
             {
                 CurrentRow--;
             }
-            else if (Direction == DirectionEnumeration.South && CurrentRow < 3)
+            else if (Direction == DirectionEnumeration.South && CurrentRow < SizeBoundary)
             {
                 CurrentRow++;
             }
@@ -74,7 +76,7 @@ namespace The_Fountain_Of_Objects
             {
                 CurrentColumn--;
             }
-            else if (Direction == DirectionEnumeration.East && CurrentColumn < 3)
+            else if (Direction == DirectionEnumeration.East && CurrentColumn < SizeBoundary)
             {
                 CurrentColumn++;
             }
