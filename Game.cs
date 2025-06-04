@@ -6,7 +6,7 @@ namespace The_Fountain_Of_Objects
 {
     public class Game(int GameSize)
     {
-        public bool GameIsWon { get; set; } = false;
+        public bool GameIsWonOrLost { get; set; } = false;
         public GridOfRooms GridOfRooms { get; set; } = new(GameSize);
         public void AskForUserInput()
         {
@@ -28,12 +28,17 @@ namespace The_Fountain_Of_Objects
             GridOfRooms.UpdateRoom(GridOfRooms.HandleUserInput());
         }
 
-        public bool HandleGameIsWon()
+        public bool HandleGameIsWonOrLost()
         {
             if (GridOfRooms.GetCurrentRoom() is EntranceRoom && GridOfRooms.FountainIsEnabled == true)
             {
-                GameIsWon = true;
+                GameIsWonOrLost = true;
                 TextColour.HandleText(TextEnumeration.NarrativeText, "The Fountain of Objects has been reactivated, and you have escaped with your life! \nYou win!");
+                return true;
+            }
+            else if (GridOfRooms.GetCurrentRoom() is PitRoom)
+            {
+                GameIsWonOrLost = true;
                 return true;
             }
             return false;

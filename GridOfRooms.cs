@@ -11,12 +11,32 @@ namespace The_Fountain_Of_Objects
         public int CurrentColumn { get; set; }
         public bool FountainIsEnabled { get; set; } = false;
         private int SizeBoundary { get; set; } 
+        private int HalfSize {  get; set; }
+        public int SizeOfGrid { get; set; }
         public GridOfRooms(int SizeOfGrid)
         {
+            this.SizeOfGrid = SizeOfGrid;
             SizeBoundary = SizeOfGrid - 1;
+            HalfSize = SizeOfGrid / 2;
+
             Rooms = new IRoom[SizeOfGrid, SizeOfGrid];
             Rooms[SizeBoundary, 0] = new EntranceRoom(SizeBoundary, 0);
-            Rooms[0, SizeOfGrid / 2] = new FountainRoom(0, SizeOfGrid / 2);
+            Rooms[0, HalfSize] = new FountainRoom(0, HalfSize);
+
+            if(SizeOfGrid == 4) Rooms[1, HalfSize] = new PitRoom(1, HalfSize);
+            else if (SizeOfGrid == 6)
+            {
+                Rooms[1, HalfSize] = new PitRoom(1, HalfSize);
+                Rooms[HalfSize, HalfSize] = new PitRoom(HalfSize, HalfSize);
+            }
+            else
+            {
+                Rooms[1, HalfSize] = new PitRoom(1, HalfSize);
+                Rooms[HalfSize, 1] = new PitRoom(HalfSize, 1);
+                Rooms[HalfSize, HalfSize] = new PitRoom(HalfSize, HalfSize);
+                Rooms[(HalfSize) - 1, (HalfSize) - 1] = new PitRoom((HalfSize) - 1, (HalfSize) - 1);
+            }
+
             CurrentRow = SizeBoundary;
             CurrentColumn = 0;
 
@@ -33,6 +53,40 @@ namespace The_Fountain_Of_Objects
         {
             return Rooms[CurrentRow, CurrentColumn];
         }
+
+        public bool CheckForPit(IRoom Room)
+        {
+            if (Room is PitRoom)
+            {
+                return true;
+            }
+            return false;
+        }
+        public void CheckAdjacentRooms()
+        {
+            int[][] Directions = [
+                [1, 0], [-1, 0],
+                [0, 1], [0, -1],
+                [1, 1], [-1, -1],
+                [1, -1], [-1, 1]
+            ];
+
+            foreach (int[] Direction in Directions)
+            {
+                int AdjacentRow = CurrentRow + Direction[0];
+                int AdjacentCol = CurrentColumn + Direction[1];
+
+                if (AdjacentRow >= 0 && AdjacentRow < SizeOfGrid && AdjacentCol >= 0 && AdjacentCol < SizeOfGrid)
+                {
+                    IRoom Room = Rooms[AdjacentRow, AdjacentCol];
+                    if (CheckForPit(Room))
+                    {
+                        TextColour.HandleText(TextEnumeration.DescriptiveText, "You feel a draft. There is a pit in a nearby room.");
+                    }
+                }
+            }
+        }
+
 
         public DirectionEnumeration? HandleUserInput()
         {

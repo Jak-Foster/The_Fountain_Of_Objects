@@ -7,12 +7,13 @@ internal class Program
     {        
         Game Game = new(GameSize.HandleGameSize());
 
-        while(!Game.GameIsWon)
+        while(!Game.GameIsWonOrLost)
         {
             TextColour.HandleText(TextEnumeration.OtherText, "------------------------------------------------------------\r\n");
             Game.DisplayUserLocation();
             Game.DisplayRoomInformation();
-            if (Game.HandleGameIsWon()) continue;
+            if (Game.HandleGameIsWonOrLost()) continue;
+            Game.GridOfRooms.CheckAdjacentRooms();
             Game.AskForUserInput();
             Game.HandleUserAction();
             TextColour.HandleText(TextEnumeration.OtherText, "\r\n------------------------------------------------------------");
