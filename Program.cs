@@ -1,7 +1,21 @@
-﻿internal class Program
+﻿using The_Fountain_Of_Objects;
+using The_Fountain_Of_Objects.Enumerations;
+
+internal class Program
 {
     private static void Main()
     {
-        Console.WriteLine("Hello, World!");
+        Game Game = new();
+
+        while(!Game.GameIsWon)
+        {
+            TextColour.HandleText(TextEnumeration.OtherText, "------------------------------------------------------------\r\n");
+            Game.DisplayUserLocation();
+            Game.DisplayRoomInformation();
+            if (Game.HandleGameIsWon()) continue;
+            Game.AskForUserInput();
+            Game.HandleUserAction();
+            TextColour.HandleText(TextEnumeration.OtherText, "\r\n------------------------------------------------------------");
+        }
     }
 }
