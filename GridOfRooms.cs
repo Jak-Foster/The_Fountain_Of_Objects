@@ -20,25 +20,42 @@ namespace The_Fountain_Of_Objects
             HalfSize = SizeOfGrid / 2;
 
             Rooms = new IRoom[SizeOfGrid, SizeOfGrid];
+
+            //Initialise entrance and fountain rooms
             Rooms[SizeBoundary, 0] = new EntranceRoom(SizeBoundary, 0);
             Rooms[0, HalfSize] = new FountainRoom(0, HalfSize);
 
-            if(SizeOfGrid == 4) Rooms[1, HalfSize] = new PitRoom(1, HalfSize);
+            //Initialise pits and maelstroms
+            if (SizeOfGrid == 4)
+            {
+                Rooms[1, HalfSize] = new PitRoom(1, HalfSize);
+                Rooms[SizeBoundary, SizeBoundary] = new MaelstromRoom(SizeBoundary, SizeBoundary);
+
+            }
             else if (SizeOfGrid == 6)
             {
                 Rooms[1, HalfSize] = new PitRoom(1, HalfSize);
                 Rooms[HalfSize, HalfSize] = new PitRoom(HalfSize, HalfSize);
+                Rooms[SizeBoundary, SizeBoundary] = new MaelstromRoom(SizeBoundary, SizeBoundary);
             }
             else
             {
                 Rooms[1, HalfSize] = new PitRoom(1, HalfSize);
                 Rooms[HalfSize, 1] = new PitRoom(HalfSize, 1);
                 Rooms[HalfSize, HalfSize] = new PitRoom(HalfSize, HalfSize);
-                Rooms[(HalfSize) - 1, (HalfSize) - 1] = new PitRoom((HalfSize) - 1, (HalfSize) - 1);
+                Rooms[HalfSize - 1, HalfSize - 1] = new PitRoom(HalfSize - 1, HalfSize - 1);
+                Rooms[SizeBoundary, SizeBoundary] = new MaelstromRoom(SizeBoundary, SizeBoundary);
+                Rooms[HalfSize + 1, HalfSize + 1] = new MaelstromRoom(HalfSize + 1, HalfSize + 1);
             }
 
             CurrentRow = SizeBoundary;
             CurrentColumn = 0;
+
+            //Ideally adjust the constructor logic so that it randomly populate the rooms
+            //Would need to have some constants for the three different game sizes
+            //Constants would determine how many of each room is in each game
+            //This could correspond to three arrays/lists
+            //Could remove each room from the list and randomly populate it in the nested rooms list
 
             for (int I = SizeOfGrid; I--> 0;)
             {
@@ -57,6 +74,15 @@ namespace The_Fountain_Of_Objects
         public bool CheckForPit(IRoom Room)
         {
             if (Room is PitRoom)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool CheckForMaelstrom(IRoom Room)
+        {
+            if (Room is MaelstromRoom)
             {
                 return true;
             }
@@ -82,6 +108,10 @@ namespace The_Fountain_Of_Objects
                     if (CheckForPit(Room))
                     {
                         TextColour.HandleText(TextEnumeration.DescriptiveText, "You feel a draft. There is a pit in a nearby room.");
+                    }
+                    if(CheckForMaelstrom(Room))
+                    {
+                        TextColour.HandleText(TextEnumeration.DescriptiveText, "You hear the growling and groaning of a maelstrom nearby.");
                     }
                 }
             }
